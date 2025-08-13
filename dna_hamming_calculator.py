@@ -596,9 +596,10 @@ def create_distance_matrix_plot(sequences: List[str], labels: List[str] = None) 
         x=labels,
         y=labels,
         colorscale=[
-            [0, '#ff4444'],      # Red for low distances (critical)
-            [0.33, '#ffa500'],   # Orange for medium distances  
-            [0.66, '#4a90e2'],   # Blue for medium-high distances (safe)
+            [0, '#ffffff'],      # White for distance 0 (identical sequences)
+            [0.15, '#ff4444'],   # Red for low distances (critical)
+            [0.4, '#ffa500'],    # Orange for medium distances  
+            [0.7, '#4a90e2'],    # Blue for medium-high distances (safe)
             [1, '#1a2332']       # Dark genome for high distances (very different)
         ],
         showscale=True,
