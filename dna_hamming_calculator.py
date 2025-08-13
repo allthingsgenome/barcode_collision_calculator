@@ -622,7 +622,7 @@ def create_distance_matrix_plot(sequences: List[str], labels: List[str] = None) 
     
     fig.update_layout(
         title={
-            'text': "🧬 DNA Sequence Distance Matrix - Precision Genomics",
+            'text': "Sequence Distance Matrix",
             'x': 0.5,
             'xanchor': 'center',
             'font': {'size': 24, 'color': '#ffffff', 'family': 'Inter'}
