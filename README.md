@@ -8,9 +8,9 @@ Calculate Hamming distances between DNA sequences and detect barcode collisions.
 - **Interactive Heatmap**: Visual distance matrix
 - **Collision Detection**: Identifies problematic sequence pairs
 - **Color Coding**:
-  - 🔵 **Blue**: Distance < 2 (critical risk)
+  - 🔴 **Red**: Distance < 2 (critical risk)
   - 🟠 **Orange**: Distance = 2 (medium risk)  
-  - 🟢 **Green**: Distance ≥ 4 (safe)
+  - 🔵 **Blue**: Distance ≥ 4 (safe)
 
 ## Installation
 
@@ -64,9 +64,9 @@ The number of positions where two sequences differ.
 
 Shows sequence pairs that may cause conflicts:
 
-- **🔵 Blue (< 2)**: Critical risk - sequences too similar
+- **🔴 Red (< 2)**: Critical risk - sequences too similar
 - **🟠 Orange (= 2)**: Medium risk - potential issues  
-- **🟢 Green (≥ 4)**: Safe - sufficient distance
+- **🔵 Blue (≥ 4)**: Safe - sufficient distance
 
 Each collision pair is shown only once.
 

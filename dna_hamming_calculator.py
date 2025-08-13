@@ -553,11 +553,11 @@ def get_color_for_distance(distance: int) -> str:
         Color string for the distance
     """
     if distance < 2:
-        return '#4a90e2'  # Blue - very similar sequences
+        return '#ff4444'  # Red - very similar sequences (critical)
     elif 2 <= distance <= 3:
         return '#ffa500'  # Orange - moderately similar sequences
     else:
-        return '#00ff88'  # Green - different sequences
+        return '#4a90e2'  # Blue - different sequences (safe)
 
 def create_distance_matrix_plot(sequences: List[str], labels: List[str] = None) -> go.Figure:
     """
@@ -596,9 +596,9 @@ def create_distance_matrix_plot(sequences: List[str], labels: List[str] = None) 
         x=labels,
         y=labels,
         colorscale=[
-            [0, '#4a90e2'],      # Blue for low distances (very similar)
+            [0, '#ff4444'],      # Red for low distances (critical)
             [0.33, '#ffa500'],   # Orange for medium distances  
-            [0.66, '#00ff88'],   # Green for medium-high distances
+            [0.66, '#4a90e2'],   # Blue for medium-high distances (safe)
             [1, '#1a2332']       # Dark genome for high distances (very different)
         ],
         showscale=True,
@@ -670,9 +670,9 @@ def main():
         <br>
         Calculate that computes the hamming distance between DNA sequences:
         <ul>
-            <li><span style="color: #4a90e2; font-weight: 600;">🔵 Blue:</span> Distance < 2 (nearly identical sequences - barcode conflicts)</li>
-            <li><span style="color: #ffa500; font-weight: 600;">🟠 Orange:</span> Distance 2-3 (similar sequences with potential issues)</li>
-            <li><span style="color: #00ff88; font-weight: 600;">🟢 Green:</span> Distance ≥ 4 (sufficiently different sequences - safe barcodes)</li>
+            <li><span style="color: #ff4444; font-weight: 600;">🔴 Red:</span> Distance < 2 (nearly identical sequences - barcode conflicts - BAD)</li>
+            <li><span style="color: #ffa500; font-weight: 600;">🟠 Orange:</span> Distance 2-3 (similar sequences with potential issues - PROCEED WITH CARE)</li>
+            <li><span style="color: #4a90e2; font-weight: 600;">🔵 Blue:</span> Distance ≥ 4 (sufficiently different sequences - safe barcodes - GOOD)</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -732,19 +732,12 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
-        # Display distance matrix
-        st.markdown('<h3 class="sub-header">🎯 Distance Matrix</h3>', unsafe_allow_html=True)
-        
-        # Create and display the heatmap
-        fig = create_distance_matrix_plot(sequences)
-        st.plotly_chart(fig, use_container_width=True)
-        
         # Barcode Collisions - sequences with distance <= 2
         st.markdown('<h3 class="sub-header">⚠️ Barcode Collisions</h3>', unsafe_allow_html=True)
         
         # Find unique collision pairs (distance <= 2) - no duplicates
         collision_pairs = []
-        blue_collision_count = 0
+        red_collision_count = 0
         orange_collision_count = 0
         
         for i in range(len(sequences)):
@@ -752,11 +745,11 @@ def main():
                 distance = calculate_hamming_distance(sequences[i], sequences[j])
                 
                 if distance <= 2:  # Collision detected
-                    collision_type = "🔵 Blue" if distance < 2 else "🟠 Orange"
-                    collision_color = "Blue" if distance < 2 else "Orange"
+                    collision_type = "🔴 Red" if distance < 2 else "🟠 Orange"
+                    collision_color = "Red" if distance < 2 else "Orange"
                     
                     if distance < 2:
-                        blue_collision_count += 1
+                        red_collision_count += 1
                     else:
                         orange_collision_count += 1
                     
@@ -783,8 +776,8 @@ def main():
             
             # Style the collision dataframe based on risk level
             def highlight_collision_severity(row):
-                if row['Color Category'] == 'Blue':  # Distance < 2 - highest severity
-                    return ['background-color: rgba(74, 144, 226, 0.3)'] * len(row)  # Blue highlight
+                if row['Color Category'] == 'Red':  # Distance < 2 - highest severity
+                    return ['background-color: rgba(255, 68, 68, 0.3)'] * len(row)  # Red highlight
                 else:  # Distance = 2 - medium severity
                     return ['background-color: rgba(255, 165, 0, 0.3)'] * len(row)  # Orange highlight
             
@@ -803,7 +796,7 @@ def main():
             with col1:
                 st.metric("⚠️ Total Collision Pairs", total_collision_pairs)
             with col2:
-                st.metric("🔵 Blue Collisions (< 2)", blue_collision_count)
+                st.metric("🔴 Red Collisions (< 2)", red_collision_count)
             with col3:
                 st.metric("🟠 Orange Collisions (= 2)", orange_collision_count)
             
@@ -820,6 +813,13 @@ def main():
                 <strong>✅ No Collisions Detected:</strong> All sequences have sufficient distance (> 2) for barcode applications.
             </div>
             """, unsafe_allow_html=True)
+        
+        # Display distance matrix
+        st.markdown('<h3 class="sub-header">🎯 Distance Matrix</h3>', unsafe_allow_html=True)
+        
+        # Create and display the heatmap
+        fig = create_distance_matrix_plot(sequences)
+        st.plotly_chart(fig, use_container_width=True)
     
     else:
         st.markdown("""
