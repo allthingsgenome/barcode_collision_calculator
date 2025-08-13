@@ -690,12 +690,12 @@ def main():
     
     if input_method == "📝 Copy & Paste":
         st.sidebar.markdown("**Paste your DNA sequences below:**")
-        st.sidebar.markdown("*One sequence per line. Labels are optional (e.g., 'Seq1: ATGC')*")
+        st.sidebar.markdown("One sequence per line. Labels are optional (e.g., 'Seq1: ATGC')")
         
         text_input = st.sidebar.text_area(
             "DNA Sequences:",
             height=200,
-            placeholder="Example:\nSeq1: ATGCATGC\nSeq2: ATGGATGC\nSeq3: TTGCATGC",
+            placeholder="Example:\nSeq1: ATGCATGC\nSeq2: ATGGATGC\nSeq3: TTGCATGC\nPress command/control + enter to submit",
             help="Enter each sequence on a new line"
         )
         
